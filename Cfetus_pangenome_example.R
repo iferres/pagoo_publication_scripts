@@ -312,26 +312,3 @@ ggsave("Gene_content_tree.png", gct, height = 8)
 
 
 
-
-
-
-
-
-# 
-# 1:60 %>%
-#   sapply(function(x) {
-#     ali[ names(sort(dtopo)[1:x]) ] %>%
-#       do.call(Biostrings::xscat, .) %>%  
-#       setNames(p$organisms$org) %>%           # Set sequence names
-#       as('matrix') %>%                        # Transform to matrix
-#       phangorn::phyDat(type = 'DNA') %>%      # Transform to phangorn's phyDat
-#       phangorn::dist.ml() %>%                 # Compute distance
-#       phangorn::NJ() %>%
-#       ape::dist.topo(y = phy$tree)
-#   }) %>%
-#   density() %>%
-#   plot()
-# 
-# 
-
-
