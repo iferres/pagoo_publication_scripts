@@ -2,13 +2,16 @@
 #####################
 ## Set environment ##
 #####################
-setwd(tempdir())
+#setwd(tempdir())
 
 ## Download and decompress data
-tar_gz <- "cfettus_pangenome.tar.gz"
-download.file(url = "", destfile = tar_gz) # Poner en figshare o zenodo
+tar_gz <- "cfetus_pangenome.tar.gz"
+if ( !file.exists(tar_gz) ){
+	download.file(url = "https://ndownloader.figshare.com/files/26144075", destfile = tar_gz)
+}
 untar(tarfile = tar_gz)
 
+set.seed(123)
 
 ##################
 ## Load dataset ##
@@ -57,10 +60,13 @@ p$summary_stats
 library(magrittr)
 
 ## Barplot: number of CDS per organism.
+pdf("barplot_Num_CDS_all.pdf")
 p$pan_matrix %>%
   rowSums() %>%
   sort(decreasing = TRUE) %>% 
-  barplot()
+  barplot(main = "Number of CDS on each genome",
+          sub = "The four genomes with abnormal number of CDS will be removed from the dataset")
+dev.off()
 
 # There're 4 organisms with an abnormal number of cds. Drop them from the
 #  pangenome.
@@ -176,6 +182,7 @@ tangle <- pp + geom_line(aes(x, y, group=label, color = Host), data=dd) +
 
 # Save
 ggsave("tanglegram.pdf", plot = tangle)
+ggsave("tanglegram.png", plot = tangle)
 
 
 ####################
@@ -196,6 +203,8 @@ rhb <- hierBAPS(snp.matrix = ali %>%                  # Runs the hierBAPS algori
 Lin <- rhb$partition.df
 rownames(Lin) <- Lin$Isolate
 Lin$Isolate <- NULL
+Lin[] <- lapply(Lin, as.factor)
+
  
 # > tail(Lin)
 #            level 1 level 2 level 3
@@ -215,17 +224,36 @@ Lin$Isolate <- NULL
 # a group of bovine isolates, and another with various hosts:
 pcaplot <- p$gg_pca(colour = "Host")
 ggsave("PCA.pdf", pcaplot)
+ggsave("PCA.png", pcaplot)
 
 # Compute PCA and plot density of cluster loadings in PC1.
-pca <- p$pan_pca()                        # Compute prcomp().
-plot(density(pca$rotation[, 1]))          # Plot cluster variance loadings on the
+pca <- p$pan_pca()# Compute prcomp().
+pdf("PC1_loading_density.pdf")
+plot(density(pca$rotation[, 1]),          # Plot cluster variance loadings on the
+     main = "PC1 Loading Density",
+     sub = "Clusters with loading less than -0.05 and grater than 0.05 contribute to variance the most.")          
                                           # principal component.
 abline(v = c(-0.05, 0.05), col= "red")    # Most of the clusters have low loadings,
                                           # i.e. near 0. We need those with high
                                           # absolute loading ( -0.05 > x > 0.05 ).
+dev.off()
 
 # Which clusters have high absolute loading ?
 hload <- which( abs( pca$rotation[,1]) > 0.05 )
+#      barS1     cirA_2       dapH     dctA_2     dpnM_2       exsA     fabG_1     fabG_2      fmt_2        glf group_1024 group_1026 
+#         80        138        194        200        234        256        260        261        314        348        412        414 
+#  group_103 group_1149 group_1153 group_1282 group_1350 group_1359 group_1371 group_1565  group_173 group_1760 group_1798 group_1799 
+#        417        523        527        647        707        712        722        878        989       1006       1031       1032 
+# group_1859 group_1923 group_2327 group_2328 group_2508 group_2880 group_3321 group_3323 group_3325 group_3336 group_3361 group_3371 
+#       1074       1137       1376       1377       1451       1652       2045       2046       2047       2056       2068       2076 
+# group_3372 group_3390  group_446  group_447  group_449  group_454  group_455   group_46  group_472  group_475  group_476  group_482 
+#       2077       2091       2788       2789       2791       2796       2797       2799       2811       2814       2815       2822 
+#  group_505  group_509  group_512  group_513  group_539  group_543  group_544  group_593  group_625  group_626  group_627  group_643 
+#       2844       2848       2852       2853       2874       2878       2879       2916       2950       2951       2952       2964 
+# group_7159  group_746  group_764  group_766  group_830  group_832  group_909  group_978  group_986     hldD_1     lexA_2     lexA_3 
+#       3589       3656       3672       3674       3726       3728       3794       3853       3859       3912       3994       3995 
+#     moaA_1     moaA_2       pctA       rfbE     trmR_2 
+#       4074       4075       4208       4341       4560
 
 ###########################################
 ## Plot a heatmap associated with a tree ##
