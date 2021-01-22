@@ -5,14 +5,16 @@ From: conda/miniconda3
 	environment.yml /opt/environment.yml
 
 %post
-	apt-get update && apt-get install build-essential -y
+	apt-get update
+	apt-get install build-essential -y
+	apt-get clean && apt-get autoclean && apt-get autoremove
 	
 	conda env create -f /opt/environment.yml && conda clean -afy
 
 	export PATH="/usr/local/envs/pagoo/bin:$PATH"
 
 	R --slave -e 'devtools::install_github("iferres/pagoo")'
-	R --slave -e 'install.packages("rhierbaps")'
+	R --slave -e 'install.packages("rhierbaps", repos="http://cran.us.r-project.org")'
 
 %environment
 	export PATH="/usr/local/envs/pagoo/bin:$PATH"
