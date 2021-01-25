@@ -13,6 +13,7 @@ From: conda/miniconda3
 
 	export PATH="/usr/local/envs/pagoo/bin:$PATH"
 
+        pip3 install zenodo_get
 	R --slave -e 'devtools::install_github("iferres/pagoo")'
 	R --slave -e 'install.packages("rhierbaps", repos="http://cran.us.r-project.org")'
 
