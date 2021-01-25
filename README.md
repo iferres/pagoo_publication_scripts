@@ -1,3 +1,5 @@
+[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/5123)
+
 # Pagoo - Publication Scripts
 Scripts supporting pagoo's publication.
 
@@ -17,8 +19,11 @@ sudo singularity build pagoo_demo.sif Singularity
 A prebuilt image hosted at singularity-hub will be provided in the near future.
 
 ### Run
+To run the C. fetus script, all at once:
 ```bash
-singularity shell pagoo_demo.sif
+# The following expects the container (.sif) and the script (.R) in
+# the current working directory.
+singularity exec pagoo_demo.sif Rscript --vanilla Cfetus_pangenome_example.R
 ```
 
 #### Known issues
