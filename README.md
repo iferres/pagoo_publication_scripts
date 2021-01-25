@@ -7,6 +7,8 @@ Scripts supporting pagoo's publication.
 This repo contains 2 scripts to reproduce the analyses described in the pagoo manuscript. `timing_benchmark.R` runs roary and evaluates timings over a set of pagoo's operations. `Cfetus_pangenome_example.R` downloads a Campylobacter fetus dataset and uses pagoo along with other R packages to perform a series of analyses. 
 
 ## Data
+Data required by `timing_benchmark.R` is hosted at: https://zenodo.org/record/3341535#.YA7_8ZqvHJE (Publication: [Decano & Downing, 2019](https://www.nature.com/articles/s41598-019-54004-5), dataset doi:10.5281/zenodo.3341534). The script automatically downloads and decompress it in the working directory.
+
 Data required by `Cfetus_pangenome_example.R` is hosted at: https://figshare.com/articles/dataset/Campylobacter_fetus_genomes_and_pangenome_for_pagoo_demo/13622354 . The script automatically downloads and decompress it in the working directory.
 
 ## Singularity container
