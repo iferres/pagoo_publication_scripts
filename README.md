@@ -13,19 +13,38 @@ Data required by `Cfetus_pangenome_example.R` is hosted at: https://figshare.com
 This repo also contains a Singularity file to build a Singularity image with all dependencies needed to run the scripts. 
 
 ### Build
+To manually build the container:
 ```bash
-sudo singularity build pagoo_demo.sif Singularity
+git clone https://github.com/iferres/pagoo_publication_scripts
+cd ./pagoo_publication_scripts
+sudo singularity build pagoo_publicaction_container.sif Singularity
 ```
-A prebuilt image hosted at singularity-hub will be provided in the near future.
+
+### Pull
+To pull the prebuilt container hosted at singularity-hub:
+```bash
+singularity pull pagoo_publication_container.sif shub://iferres/pagoo_publication_scripts
+```
 
 ### Run
 To run the C. fetus script, all at once:
 ```bash
-# The following expects the container (.sif) and the script (.R) in
-# the current working directory.
-singularity exec pagoo_demo.sif Rscript --vanilla Cfetus_pangenome_example.R
+# The following expects the script (.R) and the container (.sif) 
+# in the current working directory.
+singularity exec pagoo_publication_container.sif Rscript --vanilla Cfetus_pangenome_example.R
+```
+If you want to play more freely with the package, you can shell into the container, start an interactive R session, and load pagoo:
+```bash
+# Start container
+singularity shell pagoo_publication_container.sif
+# Start R
+R
+```
+```r
+# Inside R, load pagoo
+library(pagoo)
 ```
 
-#### Known issues
+#### Known limitations
 Shiny app doesn't work from within the container, although it is not needed by the scripts.
 
