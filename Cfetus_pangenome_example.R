@@ -9,7 +9,7 @@ tar_gz <- "cfetus_pangenome.tar.gz"
 if ( !file.exists(tar_gz) ){
 	download.file(url = "https://ndownloader.figshare.com/files/26144075", destfile = tar_gz)
 }
-untar(tarfile = tar_gz)
+untar(tarfile = tar_gz, exdir = "C_fetus")
 
 set.seed(123)
 
@@ -18,17 +18,18 @@ set.seed(123)
 ##################
 
 ## List gff files.
-gffs <- list.files(pattern = "[.]gff$", 
+gffs <- list.files(path = "C_fetus", 
+                   pattern = "[.]gff$", 
                    recursive = TRUE, 
                    full.names = TRUE)
 
 ## List roary's gene_presence_absence.csv output file.
-gpa <- list.files(path = "pangenome_cfettus/", 
+gpa <- list.files(path = "C_fetus/pangenome_cfettus/", 
                   pattern = "gene_presence_absence[.]csv", 
                   full.names = TRUE)
 
 ## Read organism's metadata.
-org_meta <- read.csv("metadata_Cfettus_Iraola_2017.tsv", sep = "\t")
+org_meta <- read.csv("C_fetus/metadata_Cfettus_Iraola_2017.tsv", sep = "\t")
 org_meta$org <- org_meta$Lane
 org_meta$Lane <- NULL
 
@@ -38,7 +39,7 @@ library(pagoo)
 ## Load pangenome and add metadata to organisms.
 p <- roary_2_pagoo(gene_presence_absence_csv = gpa, gffs = gffs)
 p$add_metadata("org", data = org_meta)
-p$save_pangenomeRDS("pangenome.rds")
+p$save_pangenomeRDS("C_fetus/pangenome.rds")
 # p <- load_pangenomeRDS("pangenome.rds")
 
 ## Set core-level to 100%.
@@ -60,7 +61,7 @@ p$summary_stats
 library(magrittr)
 
 ## Barplot: number of CDS per organism.
-pdf("barplot_Num_CDS_all.pdf")
+pdf("C_fetus/barplot_Num_CDS_all.pdf")
 p$pan_matrix %>%
   rowSums() %>%
   sort(decreasing = TRUE) %>% 
@@ -181,8 +182,8 @@ tangle <- pp + geom_line(aes(x, y, group=label, color = Host), data=dd) +
   ggtitle("Tanglegram", subtitle = "Coregenome phylogeny (left) vs mcp4 phylogeny (right)")
 
 # Save
-ggsave("tanglegram.pdf", plot = tangle)
-ggsave("tanglegram.png", plot = tangle)
+ggsave("C_fetus/tanglegram.pdf", plot = tangle)
+ggsave("C_fetus/tanglegram.png", plot = tangle)
 
 
 ####################
@@ -223,12 +224,12 @@ Lin[] <- lapply(Lin, as.factor)
 # The first PC is able to find two groups which clearly distinct between a
 # a group of bovine isolates, and another with various hosts:
 pcaplot <- p$gg_pca(colour = "Host")
-ggsave("PCA.pdf", pcaplot)
-ggsave("PCA.png", pcaplot)
+ggsave("C_fetus/PCA.pdf", pcaplot)
+ggsave("C_fetus/PCA.png", pcaplot)
 
 # Compute PCA and plot density of cluster loadings in PC1.
 pca <- p$pan_pca()# Compute prcomp().
-pdf("PC1_loading_density.pdf")
+pdf("C_fetus/PC1_loading_density.pdf")
 plot(density(pca$rotation[, 1]),          # Plot cluster variance loadings on the
      main = "PC1 Loading Density",
      sub = "Clusters with loading less than -0.05 and grater than 0.05 contribute to variance the most.")          
@@ -335,8 +336,8 @@ gh5 <- gheatmap(gh4, p$pan_matrix[, names(hload)[ord] ],
 gct <- gh5 + theme(legend.position="top", legend.key.size = unit(10, "points"))
 
 # Save.
-ggsave("Gene_content_tree.pdf", gct, height = 8)
-ggsave("Gene_content_tree.png", gct, height = 8)
+ggsave("C_fetus/Gene_content_tree.pdf", gct, height = 8)
+ggsave("C_fetus/Gene_content_tree.png", gct, height = 8)
 
 
 
