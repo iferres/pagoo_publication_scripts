@@ -103,7 +103,6 @@ allgffs <- list.files(path = "decano_downing_2019_dataset_gffs/",
                       pattern = "[.]gff$", 
                       full.names = TRUE)
 
-# Load pagoo
 library(pagoo)
 library(parallel)
 
@@ -119,10 +118,12 @@ gffs <- lapply(ns, function(x) sample(allgffs, x) )
 p <- 6
 mc.cores <- 5
 
-timings_dfs <- mcmapply(function(gffs, n, f, p) {
+timings_dfs <- mcmapply(function(gffs, n, f, p) { 
+
+  # Run roary
+  roary_out <- run_roary(gffs, p = p, f = f)
 
   # grep roary's csv file
-  roary_out <- list.files(path = f, full.names = TRUE)
   gpa <- grep("gene_presence_absence[.]csv$", roary_out, value = TRUE)
 
   # repeat 10 times each operation
