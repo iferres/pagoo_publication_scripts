@@ -203,6 +203,7 @@ saveRDS(timings_dfs, file = "timings.RDS")
 
 # Write tsv
 x <- do.call(rbind, unlist(timings_dfs, recursive = FALSE))
+x$Type <- ifelse(x$Operation %in% c("roary_csv", "roary_csv_gff", "preloaded_seq"), "Load", "Query")
 write.table(x, file = "timings.tsv", quote = FALSE, sep = "\t", row.names = FALSE)
 
 # Plot
