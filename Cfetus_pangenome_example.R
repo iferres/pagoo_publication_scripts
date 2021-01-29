@@ -91,6 +91,60 @@ p$summary_stats
 # 3       Shell      2757
 # 4       Cloud       765
 
+
+##############################
+## General statistics plots ##
+##############################
+
+library(ggplot2)
+library(patchwork)
+
+# 1. Pangenome curves
+curves <- p$gg_curves() +                                     # Plot core- and pan-genome curves
+  scale_color_manual(values = c('black', 'black')) +  # Customize line colors
+  geom_point(alpha = .05, size = 4, color = 'grey') + # Add semi-transparent data points
+  theme_bw(base_size = 15) +                          # Customize background theme
+  theme(legend.position = 'none',                     # Remove legend
+        axis.title = element_text(size = 12),                     # Customize axis title
+        axis.text = element_text(size = 12))                      # Customize axis text size
+
+# 2. Gene frequency bar plots
+bars <- p$gg_barplot() +                                       # Plot gene frequency distribution
+  theme_bw(base_size = 15) +                                   # Customize background color
+  theme(axis.title = element_text(size = 12),                  # Customize axis label size
+        axis.text=element_text(size = 12)) +                   # Customize axis text size
+  geom_bar(stat = 'identity', color = 'black', fill = 'black') # Customize bar color and borders
+
+# 3. PCA of accessory genes colored by host
+pca <- p$gg_pca(colour = 'Host', size = 4) +                # Plot PCA, color by host
+  theme_bw(base_size = 10) +                                # Customize background theme
+  theme(legend.position = 'bottom') +                       # Customize legend position
+  theme(axis.title = element_text(size = 12),               # Customize axis title
+        axis.text = element_text(size = 12))                # Customize axis text size
+
+# 4. Pie chart of core and accessory genes
+pie <- p$gg_pie() +                                         # Plot pie chart
+  theme_bw(base_size = 10) +                                # Customize background theme
+  scale_fill_discrete(guide = guide_legend(keywidth = .75,
+                                           keyheight = .75)) + # Customize fill
+  scale_fill_brewer(palette = "Blues") +                    # Customize fill color
+  scale_x_discrete(breaks = c(0, 25, 50, 75)) +             # Customize axis scales
+  theme(legend.position = 'bottom',                         # Customize legend position
+        legend.title = element_blank(),                     # Remove legend title
+        legend.text = element_text(size = 10),              # Change legend text size
+        legend.margin = margin(0, 0, 13, 0),                # Change legend margins
+        legend.box.margin = margin(0, 0, 5, 0),             # Change box margins
+        axis.title.x = element_blank(),                     # Remove X-axis title
+        axis.title.y = element_blank(),                     # Remove Y-axis title
+        axis.ticks = element_blank(),                       # Remove axis ticks
+        axis.text.x = element_blank())                      # Remove X-axis text
+
+
+# 5. Use patchwork to arrange plots using math operators
+stats_plots <- (curves + bars) / (pca + pie)
+ggsave(filename = "stats_plots.pdf", stats_plots)
+ggsave(filename = "stats_plots.png", stats_plots)
+
 #######################################
 ## Concatenated core-genome phylogeny #
 #######################################
