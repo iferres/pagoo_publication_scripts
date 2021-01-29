@@ -142,8 +142,8 @@ pie <- p$gg_pie() +                                         # Plot pie chart
 
 # 5. Use patchwork to arrange plots using math operators
 stats_plots <- (curves + bars) / (pca + pie)
-ggsave(filename = "stats_plots.pdf", stats_plots)
-ggsave(filename = "stats_plots.png", stats_plots)
+ggsave(filename = "C_fetus/stats_plots.pdf", stats_plots)
+ggsave(filename = "C_fetus/stats_plots.png", stats_plots)
 
 #######################################
 ## Concatenated core-genome phylogeny #
