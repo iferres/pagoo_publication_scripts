@@ -310,6 +310,12 @@ hload <- which( abs( pca$rotation[,1]) > 0.05 )
 #     moaA_1     moaA_2       pctA       rfbE     trmR_2 
 #       4074       4075       4208       4341       4560
 
+# Write a table with their cluster annotation
+write.table(p[ names(hload) ]$clusters, 
+            file = "C_fetus/pc1_genes.csv", 
+            quote = F, sep = "\t", row.names = FALSE)
+
+
 ###########################################
 ## Plot a heatmap associated with a tree ##
 ###########################################
