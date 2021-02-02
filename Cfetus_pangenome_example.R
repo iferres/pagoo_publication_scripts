@@ -116,7 +116,7 @@ bars <- p$gg_barplot() +                                       # Plot gene frequ
   geom_bar(stat = 'identity', color = 'black', fill = 'black') # Customize bar color and borders
 
 # 3. PCA of accessory genes colored by host
-pca <- p$gg_pca(colour = 'Host', size = 4) +                # Plot PCA, color by host
+pcaplot <- p$gg_pca(colour = 'Host', size = 4) +                # Plot PCA, color by host
   theme_bw(base_size = 10) +                                # Customize background theme
   theme(legend.position = 'bottom') +                       # Customize legend position
   theme(axis.title = element_text(size = 12),               # Customize axis title
@@ -141,7 +141,7 @@ pie <- p$gg_pie() +                                         # Plot pie chart
 
 
 # 5. Use patchwork to arrange plots using math operators
-stats_plots <- (curves + bars) / (pca + pie)
+stats_plots <- (curves + bars) / (pcaplot + pie)
 ggsave(filename = "C_fetus/stats_plots.pdf", stats_plots)
 ggsave(filename = "C_fetus/stats_plots.png", stats_plots)
 
@@ -277,9 +277,7 @@ Lin[] <- lapply(Lin, as.factor)
 
 # The first PC is able to find two groups which clearly distinct between a
 # a group of bovine isolates, and another with various hosts:
-pcaplot <- p$gg_pca(colour = "Host")
-ggsave("C_fetus/PCA.pdf", pcaplot)
-ggsave("C_fetus/PCA.png", pcaplot)
+pcaplot
 
 # Compute PCA and plot density of cluster loadings in PC1.
 pca <- p$pan_pca()# Compute prcomp().
@@ -396,8 +394,8 @@ gh5 <- gheatmap(gh4, p$pan_matrix[, names(hload)[ord] ],
 gct <- gh5 + theme(legend.position="top", legend.key.size = unit(10, "points"))
 
 # Save.
-ggsave("C_fetus/Gene_content_tree.pdf", gct, height = 8)
-ggsave("C_fetus/Gene_content_tree.png", gct, height = 8)
+ggsave("C_fetus/Gene_content_tree.pdf", gct, height = 8, width = 10)
+ggsave("C_fetus/Gene_content_tree.png", gct, height = 8, width = 10)
 
 
 
