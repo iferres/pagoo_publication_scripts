@@ -116,11 +116,12 @@ bars <- p$gg_barplot() +                                       # Plot gene frequ
   geom_bar(stat = 'identity', color = 'black', fill = 'black') # Customize bar color and borders
 
 # 3. PCA of accessory genes colored by host
-pcaplot <- p$gg_pca(colour = 'Host', size = 4) +                # Plot PCA, color by host
-  theme_bw(base_size = 10) +                                # Customize background theme
-  theme(legend.position = 'bottom') +                       # Customize legend position
-  theme(axis.title = element_text(size = 12),               # Customize axis title
-        axis.text = element_text(size = 12))                # Customize axis text size
+pcaplot <- p$gg_pca(colour = 'Host', size = 4, alpha = .7) + # Plot PCA, color by host
+  scale_color_brewer(name = "Host", palette = "Accent") +    # Set palette
+  theme_bw(base_size = 10) +                                 # Customize background theme
+  theme(legend.position = 'bottom') +                        # Customize legend position
+  theme(axis.title = element_text(size = 12),                # Customize axis title
+        axis.text = element_text(size = 12))                 # Customize axis text size
 
 # 4. Pie chart of core and accessory genes
 pie <- p$gg_pie() +                                         # Plot pie chart
@@ -132,8 +133,8 @@ pie <- p$gg_pie() +                                         # Plot pie chart
   theme(legend.position = 'bottom',                         # Customize legend position
         legend.title = element_blank(),                     # Remove legend title
         legend.text = element_text(size = 10),              # Change legend text size
-        legend.margin = margin(0, 0, 13, 0),                # Change legend margins
-        legend.box.margin = margin(0, 0, 5, 0),             # Change box margins
+        legend.margin = margin(0, 0, 0, 0),                # Change legend margins
+        legend.box.margin = margin(0, 0, 0, 0),             # Change box margins
         axis.title.x = element_blank(),                     # Remove X-axis title
         axis.title.y = element_blank(),                     # Remove Y-axis title
         axis.ticks = element_blank(),                       # Remove axis ticks
@@ -398,4 +399,49 @@ ggsave("C_fetus/Gene_content_tree.pdf", gct, height = 8, width = 10)
 ggsave("C_fetus/Gene_content_tree.png", gct, height = 8, width = 10)
 
 
+##################
+## Create Fig 2 ##
+##################
 
+gh6 <- gheatmap(gh4, p$pan_matrix[, names(hload)[ord] ], 
+                offset = 0.024, 
+                width = 3,
+                color = NULL,
+                colnames = FALSE, 
+                hjust = 0) + 
+  scale_fill_continuous(name = "Count", 
+                        breaks = c(0, 1, 3, 5, 7), 
+                        trans = "sqrt") + 
+  scale_y_continuous(expand = c(0,0)) + 
+  scale_x_continuous(expand = c(0,0)) + 
+  theme(axis.title = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.ticks.length = unit(0, "mm"))
+
+
+# Define layout
+layout <- '
+ABC
+DEE
+DEE
+'
+
+# Use patchwork to arrange figures
+fig2 <- curves + 
+  bars + 
+  (pie  + geom_label(x = 1.2, aes(y = cumsum(.data$Number) - .data$Number / 2 , label = .data$Category)) + theme(legend.position = "none")) +
+  (pcaplot + theme(legend.position = "none")) +
+  gh6 +
+  plot_layout(design = layout,  guides = "collect") &
+  plot_annotation(tag_levels = "A") &
+  theme(legend.key.size = unit(12, "pt"),
+        legend.text = element_text(size = 10), 
+        legend.title = element_text(size = 10),
+        plot.tag = element_text(face = "bold", size = 15)) &
+  guides(fill = guide_legend(nrow = 5), colour = "none")
+
+
+# Write
+ggsave("C_fetus/Fig2.pdf", fig2, height = 7, width = 12)
+ggsave("C_fetus/Fig2.tiff", fig2, height = 7, width = 12)
