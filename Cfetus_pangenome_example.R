@@ -100,13 +100,14 @@ library(ggplot2)
 library(patchwork)
 
 # 1. Pangenome curves
-curves <- p$gg_curves() +                                     # Plot core- and pan-genome curves
+curves <- p$gg_curves() +                             # Plot core- and pan-genome curves
   scale_color_manual(values = c('black', 'black')) +  # Customize line colors
   geom_point(alpha = .05, size = 4, color = 'grey') + # Add semi-transparent data points
   theme_bw(base_size = 15) +                          # Customize background theme
   theme(legend.position = 'none',                     # Remove legend
-        axis.title = element_text(size = 12),                     # Customize axis title
-        axis.text = element_text(size = 12))                      # Customize axis text size
+        axis.title = element_text(size = 12),         # Customize axis title
+        axis.text = element_text(size = 12))          # Customize axis text size
+curves$layers <- rev(curves$layers)                   # Reverse layer order to put lines on top of points
 
 # 2. Gene frequency bar plots
 bars <- p$gg_barplot() +                                       # Plot gene frequency distribution
